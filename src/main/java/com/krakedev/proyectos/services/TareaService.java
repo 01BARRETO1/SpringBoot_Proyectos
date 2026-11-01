@@ -29,7 +29,7 @@ public class TareaService {
 	}
 	
 	//Método guardar
-	public Tarea GuardarTarea(Tarea tarea) {
+	public Tarea guardarTarea(Tarea tarea) {
 		//verificamos que exista el proyecto
 		//Buscamos en la BD.
 		Proyecto respuesta= proyectoRepository.findById(tarea.getProyecto().getId())
