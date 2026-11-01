@@ -3,7 +3,7 @@ package com.krakedev.proyectos.entidades;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.hibernate.annotations.Audited.Table;
+
 
 
 import jakarta.persistence.Column;
@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 //(Entidad Relacional)
 @Entity

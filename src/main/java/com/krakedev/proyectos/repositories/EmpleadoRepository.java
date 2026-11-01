@@ -6,4 +6,7 @@ import com.krakedev.proyectos.entidades.Empleado;
 
 public interface EmpleadoRepository extends JpaRepository<Empleado, Integer>{
 
+	 boolean existsByNombreAndCargo(
+	            String nombre,
+	            String cargo);
 }
