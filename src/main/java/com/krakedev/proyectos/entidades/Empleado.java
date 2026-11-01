@@ -32,9 +32,8 @@ public class Empleado {
 	@ManyToMany(mappedBy = "empleados")
 	private List<Tarea> tareas;
 
-	public Empleado(int id, String nombre, String cargo) {
+	public Empleado(String nombre, String cargo) {
 		super();
-		this.id = id;
 		this.nombre = nombre;
 		this.cargo = cargo;
 	}

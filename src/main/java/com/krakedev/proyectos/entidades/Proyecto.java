@@ -43,9 +43,8 @@ public class Proyecto {
 		super();
 	}
 
-	public Proyecto(int id, String nombre, String descripcion, LocalDate fechaInicio) {
+	public Proyecto(String nombre, String descripcion, LocalDate fechaInicio) {
 		super();
-		this.id = id;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 		this.fechaInicio = fechaInicio;
