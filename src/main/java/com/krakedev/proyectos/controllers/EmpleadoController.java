@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.krakedev.proyectos.entidades.Empleado;
@@ -43,6 +44,8 @@ public class EmpleadoController {
 
     // Listar empleados
     @GetMapping
+    // @PreAuthorize ----> autorización, accedemos porque ya lo creamos en la clase SecurityConfing --> @EnableMethodSecurity
+  	@PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<List<Empleado>> listar() {
 
         return ResponseEntity.ok(

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.krakedev.proyectos.entidades.Proyecto;
@@ -23,6 +24,8 @@ public class ProyectoController {
     // GUARDAR PROYECTO
     // ==========================
     @PostMapping
+    // @PreAuthorize ----> autorización, accedemos porque ya lo creamos en la clase SecurityConfing --> @EnableMethodSecurity
+ 	@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> guardar(@RequestBody Proyecto proyecto) {
 
         try {
@@ -45,6 +48,8 @@ public class ProyectoController {
     // LISTAR PROYECTOS
     // ==========================
     @GetMapping
+    // @PreAuthorize ----> autorización, accedemos porque ya lo creamos en la clase SecurityConfing --> @EnableMethodSecurity
+ 	@PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<List<Proyecto>> listar() {
 
         return ResponseEntity.ok(
@@ -103,6 +108,8 @@ public class ProyectoController {
     // ELIMINAR
     // ==========================
     @DeleteMapping("/{id}")
+    // @PreAuthorize ----> autorización, accedemos porque ya lo creamos en la clase SecurityConfing --> @EnableMethodSecurity
+ 	@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> eliminar(@PathVariable int id) {
 
         boolean eliminado =

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.krakedev.proyectos.entidades.Tarea;
@@ -23,6 +24,7 @@ public class TareaController {
     // CREAR TAREA
     // =====================================
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> guardar(
             @RequestBody Tarea tarea) {
 
@@ -47,6 +49,7 @@ public class TareaController {
     // LISTAR TODAS LAS TAREAS
     // =====================================
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ResponseEntity<List<Tarea>> listar() {
 
         return ResponseEntity.ok(
