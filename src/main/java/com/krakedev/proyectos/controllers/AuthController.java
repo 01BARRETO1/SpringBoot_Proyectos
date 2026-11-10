@@ -7,7 +7,9 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -79,6 +81,28 @@ public class AuthController {
 		}
 	}
 	
+	//Método para ingresar , perfil
+		@GetMapping("/perfil")
+		public ResponseEntity<?> verPerfil(){
+			
+			//Obtener los datos del token en la variable auth/ previamente obtenidos ...
+			//en la clase JwtAutentication al final del metodo con--> ...
+			// SecurityContextHolder.getContext().setAuthentication(authentication);
+			//-----------°----------------
+			//Obtenemos el contexto--> SecurityContextHolder.getContext() 
+			//y los datos de autenticacion --> .getAuthentication()
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			
+			//Dividimos los datos --- obtenemos el nombre
+			String usuario = auth.getName();
+			//---Obtenemos el rol
+			String rol = auth.getAuthorities().iterator().next().getAuthority();
+			
+			//Respondemos con return
+			return ResponseEntity.ok(Map.of("Mensaje", "Bienvenido al sistema protegido por Spring Security",
+					"Usuario", usuario, "rol_detectado", rol, "Status", "Autenticado Exitosamente"));
+			
+		}
 	
 	//Método para hacer logout
 		//Invalidar el token
