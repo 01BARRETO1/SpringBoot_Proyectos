@@ -10,13 +10,17 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.krakedev.proyectos.entidades.Usuario;
-
+import com.krakedev.proyectos.repositories.UsuarioRepository;
+import com.krakedev.proyectos.security.JwtUtil;
+import com.krakedev.proyectos.services.TokenBlackListService;
 import com.krakedev.proyectos.services.UsuarioService;
+
+
 
 
 
@@ -26,12 +30,15 @@ public class AuthController {
 
 	private final UsuarioService usuarioService;
 	
+	private final UsuarioRepository usuarioRepository;
+	
+	private final TokenBlackListService tokenBlackListService;
 
-	public AuthController(UsuarioService usuarioService) {
+	public AuthController(UsuarioService usuarioService, UsuarioRepository usuarioRepository, TokenBlackListService tokenBlackListService ) {
 		super();
 		this.usuarioService = usuarioService;
-		
-		
+		this.usuarioRepository=usuarioRepository;
+		this.tokenBlackListService = tokenBlackListService;
 	}
 	
 	@PostMapping("/registrar")//método registrar
@@ -60,15 +67,46 @@ public class AuthController {
 		boolean autenticado = usuarioService.autenticar(username, password);
 		
 		if(autenticado) {
+			//Buscamos a este usuario en la base de datos/ .get() para recuperarlo 
+			Usuario usuario =usuarioRepository.findByUsername(username).get();
 			
+			String token = JwtUtil.generarToken(usuario.getUsername(), usuario.getRol());
 			
-			return ResponseEntity.ok(Map.of("Contraseña encriptada: ", password, "Usuario", username));
+			return ResponseEntity.ok(Map.of("token", token));
 		}else {
 			
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario o contraseña incorrecta");
 		}
 	}
 	
+	
+	//Método para hacer logout
+		//Invalidar el token
+		@PostMapping("/logout")
+		public ResponseEntity<?> logout(
+				@RequestHeader(
+						value = "Authorization",
+						required = false
+						)String authHeader)
+		{
+			//---extarer el header
+			if (authHeader != null && authHeader.startsWith("Bearer ")) {
+				
+				//Extraer el token
+				//elimina-> substring(7)
+				String token = authHeader.substring(7);
+				
+				//invalidar token
+				tokenBlackListService.invalidarToken(token);
+				
+				//Return
+				return ResponseEntity.ok(Map.of("Mensaje","Sesión cerrada Exitosamente. Token Invalido"));
+				
+			}else {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token no proporcionado");
+			}
+			
+		}
 	
 	
 	
